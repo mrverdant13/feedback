@@ -56,49 +56,87 @@ class ControlsColumn extends StatelessWidget {
             onPressed: onCloseFeedback,
           ),
           _ColumnDivider(),
-          RotatedBox(
-            quarterTurns: 1,
-            child: MaterialButton(
-              key: const ValueKey<String>('navigate_button'),
-              child: Text(FeedbackLocalizations.of(context).navigate),
-              onPressed: isNavigatingActive
-                  ? null
-                  : () => onControlModeChanged(FeedbackMode.navigate),
-              disabledTextColor:
-                  FeedbackTheme.of(context).activeFeedbackModeColor,
-            ),
+          // RotatedBox(
+          //   quarterTurns: 1,
+          //   child: MaterialButton(
+          //     key: const ValueKey<String>('navigate_button'),
+          //     child: Text(FeedbackLocalizations.of(context).navigate),
+          //     onPressed: isNavigatingActive
+          //         ? null
+          //         : () => onControlModeChanged(FeedbackMode.navigate),
+          //     disabledTextColor:
+          //         FeedbackTheme.of(context).activeFeedbackModeColor,
+          //   ),
+          // ),
+          IconButton(
+            key: const ValueKey<String>('navigate_button'),
+            tooltip: FeedbackLocalizations.of(context).navigate,
+            icon: const Icon(Icons.navigation_outlined),
+            onPressed: isNavigatingActive
+                ? null
+                : () {
+                    onControlModeChanged(FeedbackMode.navigate);
+                  },
+            disabledColor: FeedbackTheme.of(context).activeFeedbackModeColor,
           ),
           _ColumnDivider(),
-          RotatedBox(
-            quarterTurns: 1,
-            child: MaterialButton(
-              key: const ValueKey<String>('draw_button'),
-              minWidth: 20,
-              child: Text(FeedbackLocalizations.of(context).draw),
-              onPressed: isNavigatingActive
-                  ? () => onControlModeChanged(FeedbackMode.draw)
-                  : null,
-              disabledTextColor:
-                  FeedbackTheme.of(context).activeFeedbackModeColor,
+          // RotatedBox(
+          //   quarterTurns: 1,
+          //   child: MaterialButton(
+          //     key: const ValueKey<String>('draw_button'),
+          //     minWidth: 20,
+          //     child: Text(FeedbackLocalizations.of(context).draw),
+          //     onPressed: isNavigatingActive
+          //         ? () => onControlModeChanged(FeedbackMode.draw)
+          //         : null,
+          //     disabledTextColor:
+          //         FeedbackTheme.of(context).activeFeedbackModeColor,
+          //   ),
+          // ),
+          IconButton(
+            key: const ValueKey<String>('draw_button'),
+            tooltip: FeedbackLocalizations.of(context).draw,
+            icon: const Icon(Icons.draw_outlined),
+            onPressed: isNavigatingActive
+                ? () {
+                    onControlModeChanged(FeedbackMode.draw);
+                  }
+                : null,
+            disabledColor: FeedbackTheme.of(context).activeFeedbackModeColor,
+          ),
+          ...[
+            _ColumnDivider(),
+            IconButton(
+              key: const ValueKey<String>('undo_button'),
+              icon: const Icon(Icons.undo),
+              onPressed: isNavigatingActive ? null : onUndo,
+            ),
+            IconButton(
+              key: const ValueKey<String>('clear_button'),
+              icon: const Icon(Icons.delete),
+              onPressed: isNavigatingActive ? null : onClearDrawing,
+            ),
+            _ColumnDivider(),
+            for (final color in colors)
+              _ColorSelectionIconButton(
+                key: ValueKey<Color>(color),
+                color: color,
+                onPressed: isNavigatingActive ? null : onColorChanged,
+                isActive: activeColor == color,
+              ),
+          ].map(
+            (w) => AnimatedSwitcher(
+              duration: const Duration(milliseconds: 400),
+              child: isNavigatingActive ? const SizedBox.shrink() : w,
+              transitionBuilder: (child, animation) => SizeTransition(
+                sizeFactor: animation,
+                child: ScaleTransition(
+                  scale: animation,
+                  child: child,
+                ),
+              ),
             ),
           ),
-          IconButton(
-            key: const ValueKey<String>('undo_button'),
-            icon: const Icon(Icons.undo),
-            onPressed: isNavigatingActive ? null : onUndo,
-          ),
-          IconButton(
-            key: const ValueKey<String>('clear_button'),
-            icon: const Icon(Icons.delete),
-            onPressed: isNavigatingActive ? null : onClearDrawing,
-          ),
-          for (final color in colors)
-            _ColorSelectionIconButton(
-              key: ValueKey<Color>(color),
-              color: color,
-              onPressed: isNavigatingActive ? null : onColorChanged,
-              isActive: activeColor == color,
-            ),
         ],
       ),
     );
