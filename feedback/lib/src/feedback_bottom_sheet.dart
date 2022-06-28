@@ -3,7 +3,6 @@
 import 'package:feedback/src/better_feedback.dart';
 import 'package:feedback/src/theme/feedback_theme.dart';
 import 'package:feedback/src/utilities/back_button_interceptor.dart';
-
 import 'package:flutter/material.dart';
 
 /// Shows the text input in which the user can describe his feedback.
@@ -111,9 +110,11 @@ class _DraggableFeedbackSheetState extends State<_DraggableFeedbackSheet> {
                 valueListenable: widget.sheetProgress,
                 builder: (context, _, child) {
                   return ClipRRect(
-                    borderRadius: BorderRadius.vertical(
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(
-                          20 * (1 - widget.sheetProgress.value)),
+                        // 20 * (1 - widget.sheetProgress.value),
+                        5,
+                      ),
                     ),
                     child: child,
                   );
